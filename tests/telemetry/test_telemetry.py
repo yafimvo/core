@@ -565,11 +565,15 @@ def test_permissions_error(monkeypatch, capsys):
         shutil.rmtree(stats)
 
     os.mkdir(stats)
-    os.chmod(stats, stat.S_IRUSR)
+    os.chmod(stats, 444)
     monkeypatch.setattr(telemetry, 'DEFAULT_HOME_DIR', '.')
 
     with pytest.raises(PermissionError):
         telemetry.Internal()
+
+    with capsys.disabled():
+        print(os.stat(stats).st_mode)
+        print(os.access(stats, os.W_OK))
 
 
 @pytest.mark.allow_posthog
