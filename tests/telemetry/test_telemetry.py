@@ -565,7 +565,7 @@ def test_permissions_error(monkeypatch, capsys):
         shutil.rmtree(stats)
 
     os.mkdir(stats)
-    os.chmod(stats, 444)
+    os.chmod(stats, 0o000)
     monkeypatch.setattr(telemetry, 'DEFAULT_HOME_DIR', '.')
 
     with pytest.raises(PermissionError):
