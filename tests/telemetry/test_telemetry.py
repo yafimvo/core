@@ -572,8 +572,8 @@ def test_permissions_error(monkeypatch, capsys):
         telemetry.Internal()
 
     with capsys.disabled():
-        print(os.stat(stats).st_mode)
-        print(os.access(stats, os.W_OK))
+        print("Permissions : ", os.stat(stats).st_mode)
+        # print("Permissions : ", os.access(stats, os.W_OK))
 
 
 @pytest.mark.allow_posthog
