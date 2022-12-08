@@ -5,7 +5,7 @@ from pathlib import Path
 import datetime
 import logging
 import os
-
+import stat
 import shutil
 
 import pytest
@@ -565,15 +565,16 @@ def test_permissions_error(monkeypatch, capsys):
         shutil.rmtree(stats)
 
     os.mkdir(stats)
-    os.chmod(stats, 0o000)
+    os.chmod(stats, stat.S_IRGRP)
     monkeypatch.setattr(telemetry, 'DEFAULT_HOME_DIR', '.')
 
     with pytest.raises(PermissionError):
         telemetry.Internal()
 
     with capsys.disabled():
-        print("Permissions : ", os.stat(stats).st_mode)
-        # print("Permissions : ", os.access(stats, os.W_OK))
+        out, err = capsys.readouterr()
+        print(os.stat(stats).st_mode)
+        # print(os.access(stats, os.W_OK))
 
 
 @pytest.mark.allow_posthog
