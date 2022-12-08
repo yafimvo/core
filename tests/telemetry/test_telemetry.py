@@ -5,7 +5,7 @@ from pathlib import Path
 import datetime
 import logging
 import os
-import stat
+
 import shutil
 
 import pytest
