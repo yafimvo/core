@@ -561,12 +561,16 @@ def test_log_call_add_payload_success(mock_telemetry):
 
 def test_permissions_error(monkeypatch, capsys):
     stats = Path('stats')
+
     if os.path.exists(stats):
+        os.chmod(stats, 777)
         shutil.rmtree(stats)
 
     os.mkdir(stats)
-    os.chmod(stats, stat.S_IRGRP)
+    os.chmod(stats, 0o444)
     monkeypatch.setattr(telemetry, 'DEFAULT_HOME_DIR', '.')
+
+    statinfo = os.stat(stats)
 
     with pytest.raises(PermissionError):
         telemetry.Internal()
@@ -574,7 +578,7 @@ def test_permissions_error(monkeypatch, capsys):
     with capsys.disabled():
         out, err = capsys.readouterr()
         print(os.stat(stats).st_mode)
-        # print(os.access(stats, os.W_OK))
+        print(statinfo)
 
 
 @pytest.mark.allow_posthog
